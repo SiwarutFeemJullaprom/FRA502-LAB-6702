@@ -91,21 +91,47 @@ FRA502-LAB-StudentID/
 ---
 ## **If the TA finds any issues, such as a node running but not meeting the requirements etc. , you will receive half the points for that issue in each node requirement.**
 
-## Part 3 - Your Turn
+## Part 3 - How to Run
 
-Download the README.md file then fill your command for run all node when TA tests to you
+This section provides instructions for cloning, building, and running the project.
 
-Below is example
-
-1. **Clone the repository** (replace `StudentID` with your own ID):
+1. **Clone the repository** (Student ID:6702):
    ```bash
-   git clone -b LAB2 https://github.com/<your-org>/FRA502-LAB-StudentID.git
+   git clone -b LAB2 https://github.com/SiwarutFeemJullaprom/FRA502-LAB-6702.git
     ```
-2. **Run all nodes** (replace `StudentID` with your own ID):
+2. **Build the Workspace** (Student ID:6702):
    ```bash
-   ros2 run FRA502-LAB-StudentID <node_name>
+   cd FRA502-LAB-6702/
+   colcon build
    ```
-
-
-
-Modify the commands to match your package and node names. below here
+3. **Run the System In Terminal 1: Launch the Main System** (Student ID:6702):
+   ```bash
+   # Source the workspace first
+   source install/setup.bash
+   # Run the launch file
+   ros2 launch lab2 lab2_launch.py
+   ```
+4. **In Terminal 2: Launch RViz** (Student ID:6702):
+   ```bash
+   # Navigate to the workspace root and source it
+   cd /path/to/your/workspace/FRA502-LAB-6702/
+   source install/setup.bash
+   # Run RViz2
+   rviz2 -d src/lab2/lab2.rviz
+   ```
+5. **In Terminal 3: Interact with the Simulation** (Student ID:6702):
+   ```bash
+   # Navigate to the workspace root and source it
+   cd /path/to/your/workspace/FRA502-LAB-6702/
+   source install/setup.bash
+   # Call the service to spawn turtle2
+   ros2 service call /spawn_turtle turtlesim/srv/Spawn "{name: 'turtle2', x: 8.0, y: 8.0, theta: 0.0}"
+   ```
+6. **Start the Game** (Student ID:6702):
+   ```bash
+   To start the game, spawn one or more pizzas. You can do this in two ways:
+   In the Turtlesim+ window: Right-click on the desired location.
+   In the RViz window: Use the "Publish Point" tool from the top toolbar to click on the grid.
+   The eater (turtle1) will start foraging for pizzas.
+   The killer (turtle2) will start its pursuit only after the eater has consumed all active pizzas on the screen.
+   ```
