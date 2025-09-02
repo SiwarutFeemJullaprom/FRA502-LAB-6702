@@ -73,7 +73,7 @@ class EaterNode(Node):
     # ฟังก์ชันที่จะทำงานเมื่อมีคนเรียก Service /set_max_pizza
     def set_max_pizza_callback(self, request, response):
         current_max = self.max_pizza
-        self.max_pizza = request.max_pizza.data
+        self.max_pizza = request.max_pizza
         
         log_msg = f"Max pizza changed from {current_max} to {self.max_pizza}."
         # สร้างข้อความตอบกลับ (response) ตามเงื่อนไขในโจทย์
@@ -87,8 +87,8 @@ class EaterNode(Node):
 
     # ฟังก์ชันที่จะทำงานเมื่อมีคนเรียก Service /set_param
     def set_param_callback(self, request, response):
-        self.kp_linear = float(request.kp_linear.data)
-        self.kp_angular = float(request.kp_angular.data)
+        self.kp_linear = float(request.kp_linear)
+        self.kp_angular = float(request.kp_angular)
         self.get_logger().info(f"Controller gains updated: kp_linear={self.kp_linear}, kp_angular={self.kp_angular}")
         return response
 

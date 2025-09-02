@@ -57,8 +57,8 @@ class KillerNode(Node):
     # --- SERVICE SERVER & SUBSCRIBER CALLBACKS ---
     # อัปเดตค่า Gain เมื่อได้รับ request
     def set_param_callback(self, request, response):
-        self.kp_linear = float(request.kp_linear.data)
-        self.kp_angular = float(request.kp_angular.data)
+        self.kp_linear = float(request.kp_linear)
+        self.kp_angular = float(request.kp_angular)
         self.get_logger().info(f"Controller gains updated: kp_linear={self.kp_linear}, kp_angular={self.kp_angular}")
         return response
 

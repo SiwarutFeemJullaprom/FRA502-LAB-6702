@@ -13,18 +13,16 @@ setup(
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
         (os.path.join('share', package_name), glob('*.rviz')),
-        # แก้บรรทัดนี้ให้รู้จัก launch file ใหม่
-        (os.path.join('share', package_name, 'launch'), glob('launch/*.py'))
+        (os.path.join('share', package_name, 'launch'), glob('launch/*.py')),
+        # --- นี่คือบรรทัดที่ถูกต้องสำหรับติดตั้ง Executable Scripts ของ ROS 2 ---
+        (os.path.join('lib', package_name), glob('scripts/*.py'))
     ],
     install_requires=['setuptools'],
     zip_safe=True,
     maintainer='siwarut',
-    maintainer_email='siwarut@todo.todo',
-    description='FRA502 LAB2 - Eater vs. Killer',
+    maintainer_email='siwarut.jull@mail.kmutt.ac.th',
+    description='LAB3 Final Project',
     license='Apache License 2.0',
     tests_require=['pytest'],
-    scripts=[
-        'scripts/eater.py',
-        'scripts/killer.py',
-    ],
+    # เราจะไม่ใช้ entry_points หรือ scripts=[] ในกรณีนี้
 )

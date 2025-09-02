@@ -1,9 +1,9 @@
-# LAB2 - Eater vs. Killer: Spawn–Forage–Pursuit (SFP) with RViz2 and Turtlesim+
+# LAB3 - Eater vs. Killer: Spawn–Forage–Pursuit (SFP) with RViz2 and Turtlesim+
 
 An interactive lab implementing user-spawned “pizza” targets, service-driven turtle lifecycle management, and RViz2 click-to-pose evasion/pursuit behaviors using `turtlesim`.
 
 ## Important Notes
-- Complete all of this and **commit your work by 16:00 26 AUG 2025 GMT+7**.
+- Complete all of this and **commit your work by 16:00 2 SEP 2025 GMT+7**.
 - Ensure you submit your Git link in Google Classroom.
 - During the lab, you can access the internet as usual, but all Generative AI, including VSCode's Copilot and others, are prohibited.
 - Submissions are based on **the time of the last commit**.
@@ -16,87 +16,105 @@ Make an appointment for an examination by [Click here to queue](https://docs.goo
 
 # Demo and Instructions Video
 
-[![Watch the video](./demo.webp)](https://youtu.be/keqN5zx5Sp0)
+[![Watch the video](./demo.webp)](https://youtu.be/CMl5juOyN3I) 
 
 ---
-## Part 1 - Complete System Architecture
+# System Architecture
 
-[Download the System Architecture](./LAB2_SA.pdf)
-
-- Draw a complete system architecture diagram.  
-- The diagram must clearly show the connections between all nodes, including topics and services.  
-- For each node, indicate which components are **Publishers**, **Subscribers**, and **Service Clients**.  
-
+![Alt text](/LAB3_SA.jpg "System Architecture")
 ---
 
-## Part 2 - Build All Nodes
+## Part 1 - Build All Nodes
 
-**When users run** `git clone -b LAB2 [YOUR_GIT_LINK]`, the file structure must be as follows:
+**When users run** `git clone -b LAB3 [YOUR_GIT_LINK]`, the file structure must be as follows:
 
 
 
 ```
 FRA502-LAB-StudentID/
-├── src/
-│ ├── lab2.rviz
-│ ├── lab2
-│ │ ├── CMakeLists.txt
-│ │ ├── include/
-│ │ ├── lab2/
-│ │ ├── package.xml
-│ │ ├── scripts
-│ │ │ ├── eater.py
-│ │ │ ├── killer.py
-│ │ │ └── turtlesim_pose.py
-│ │ └── src/
-│ └── turtlesim_plus/
-│── LAB2_SA.pdf
+├── src
+│   ├── controller_interfaces
+│   │   ├── CMakeLists.txt
+│   │   ├── package.xml
+│   │   └── srv
+│   │       ├── SetMaxPizza.srv
+│   │       ├── SetParam.srv
+│   ├── lab3
+│   │   ├── CMakeLists.txt
+│   │   ├── include/
+│   │   ├── lab3/
+│   │   ├── package.xml
+│   │   ├── scripts
+│   │   │   ├── eater.py
+│   │   │   ├── killer.py
+│   │   └── src/
+|   └── turtlesim_plus/
 └── README.md
 
 ```
 
-- Implement **three main nodes** to satisfy the architecture:  
+- Implement **three main nodes**, **three custom service types** and **one launch file** to satisfy the architecture:  
   - `eater` (handles pizza detection and movement to spawned pizza)  
   - `killer` (pursues eater after all pizzas are consumed)  
-  - `turtlesim_pose` (monitors pose and provides position feedback)  
-
+  - `SetMaxPizza.srv` (custom service type to set maximum pizza count)
+  - `SetParam.srv` (custom service type to set `kp_linear` and `kp_angular`)
+  - `lab3_bringup.launch.py` (launches all nodes and turtlesim+)
 
 ---
+### Package `controller_interfaces` requirements
+### What this package **must contain**
+- **`SetMaxPizza.srv`** : use for setting the maximum number of pizzas that can be spawned.  
+  - Define the maximum number of pizzas by this service type : `std_msgs/Int64` with variable name : `max_pizza` and 
+  - Return response as this service type `std_msgs/String` with variable name : `log` 
+  - Value of `log` must always show the maximum number of pizzas that can be spawned with a status **success** when value of `max_pizza` from service call `>` current `max_pizza` of Node `eater` . Otherwise  show status **failed**.
+- **`SetParam.srv`** (custom service type to set `kp_linear` and `kp_angular`)
+  - Define the `kp_linear` by this service type : `std_msgs/Int64` with variable name : `kp_linear` 
+  - Define the `kp_angular` by this service type : `std_msgs/Int64` with variable name : `kp_angular` 
+  - This custom service has no response.
+
+### Launch file requirement
+### What this launch file **must do**
+- **It has to work like the demo video.**
+- `eater` and `killer` nodes must be launched.
+- `turtlesim_plus` must be included in the **launch file**.
+- Topics must be remapped as necessary.
+- Parameters for all nodes must be set.
+- All nodes must be properly configured before starting.
+- Able to configure frequency of `eater` node via **launch file** parameter with name `sampling_frequency` and default value `100.0` (Hz).
+- Able to configure frequency of `killer` node via **launch file** parameter with name `sampling_frequency` and default value `100.0` (Hz).
+
 ### Node `eater` requirement
 ### What this node **must do**
-- **Control turtle1 to target position** by publishing velocity to `/turtle1/cmd_vel` using pose feedback from `/turtle1/pose` for navigation.
-- **Accept click targets** from `/mouse_position` and `/goal_pose` and convert to turtlesim coordinates.
-- **Forage mode operation** by continuously spawning pizzas at clicked locations via spawn service and eating them in order-by-order sequence using `/turtle1/eat` service - must handle simultaneous pizza spawning while executing eating sequence.
-- **Track progress** via `/turtle1/pizza_count` to determine when all pizzas are consumed.
-- **Evade mode operation** (when all pizzas eaten) robot must move to the target from `/mouse_position` and `/goal_pose` ..
-- **Able to set max pizza** via topic `/set_max_pizza`.
-- **Node must be able to run by `ros2 run` in Terminal**.
+- **Control XXXX to target position** by publishing velocity to `/XXXX/cmd_vel` using pose feedback from `/XXXX/pose` for navigation.
+- **Accept click targets** from `/mouse_position`  and convert to turtlesim coordinates.
+- **Forage mode operation** by continuously spawning pizzas at clicked locations via spawn service and eating them in order-by-order sequence using `/XXXX/eat` service - must handle simultaneous pizza spawning while executing eating sequence.
+- **Evade mode operation** (when all pizzas eaten) robot must move to the target from `/mouse_position` .
+- Able to use **ros2 param** to set and get parameter, name `sampling_frequency` with default value `100.0` (Hz). 
+- Able to config **controller gain** via `/XXXX/set_param` service with request type `SetParam.srv`.
+- Able to config **maximum pizza** via `/XXXX/set_max_pizza` service with request type `SetMaxPizza.srv`.
 
 ### Node `killer` requirement  
 ### What this node **must do**
-- **Control turtle2 to target position** by publishing velocity to `/turtle2/cmd_vel` using pose feedback from `/turtle2/pose`.
-- **Track eater target** by subscribing to `/turtle1/pose` as moving pursuit target after all pizzas are eaten.
+- **Control YYYY to target position** by publishing velocity to `/YYYY/cmd_vel` using pose feedback from `/YYYY/pose`.
+- **Track eater target** by subscribing to `/XXXX/pose` as moving pursuit target after all pizzas are eaten.
 - **Terminate on capture** by calling `/remove_turtle` service when close enough to eater, then stop motion.
-- **Node must be able to run by `ros2 run` in Terminal**.
+- Able to use **ros2 param** to set and get parameter, name `sampling_frequency` with default value `100.0` (Hz). 
+- Able to config **controller gain** via `/XXXX/set_param` service with request type `SetParam.srv`.
 
-### Node `turtlesim_pose` requirement
-### What this node **must do**
-- **Subscribe to turtle poses** from both **`/turtle1/pose`** and **`/turtle2/pose`** (`turtlesim/Pose`) to track the positions of both turtles in real-time.
-- **Map default grid interface** with 10x10m dimensions that properly interfaces with the turtlesim+ GUI coordinate system for visualization and interaction.
-- **Publish odometry data** by creating publishers for **`/odom1`** and **`/odom2`** (`nav_msgs/Odometry`) to provide proper odometry information for both turtle1 and turtle2.
-- **Broadcast transforms** between the `odom` frame and individual turtle frames (`turtle1` and `turtle2`) using the TF2 system to maintain proper coordinate frame relationships.
-- **Implement odometry publishing function** that handles publishing odometry data to `/odom1`, `/odom2`, and corresponding `/tf` transforms for both turtles, following the example structure: `def example_pub(self, msg, turtle_name, child_frame_id)`.
-- **RViz2 compatibility** by ensuring the node works seamlessly with the provided `config fun2.rviz` configuration file for proper visualization.
-- **Node must be able to run by `ros2 run` in Terminal** with standard ROS2 command-line interface.
----
-## **If the TA finds any issues, such as a node running but not meeting the requirements etc. , you will receive half the points for that issue in each node requirement.**
+### What the `eater` and `killer` Nodes Must Do Together
 
-# LAB3 - Eater vs. Killer: Spawn–Forage–Pursuit (SFP) with RViz2 and Turtlesim+
+- Both nodes must be able to configure their controller gains via the `/XXXX/set_param` service for the `eater` node and the `/YYYY/set_param` service for the `killer` node.  
+- While the `killer` is tracking the `eater`, if the **pizza** of `eater` is modified through a service call, the `killer` must adapt by waiting for the `eater` to finish eating all the pizza before continuing.  
+- Use `/XXXX/eat_status` topic to monitor the eating status of the `eater` node.
 
-An interactive lab implementing user-spawned “pizza” targets, service-driven turtle lifecycle management, and RViz2 click-to-pose evasion/pursuit behaviors using turtlesim.
-...
-*(เนื้อหาส่วนอื่นของ README.md ที่เหมือนเดิม)*
-...
+### Student requirement
+- **Modify the service and topic** of the `eater_node` so that the namespace can be defined according to the project structure as specified. The namespace will be named XXXX.
+- **Modify the service and topic** of the `killer_node` so that the namespace can be defined according to the project structure as specified. The namespace will be named YYYY.
+- **Perform a kill** on the turtle named `/turtle1` through a launch file.
+- **Perform a spawn** for the turtle named `/XXXX` through a launch file, where XXXX will be the namespace name.
+- **Perform a spawn** for the turtle named `/YYYY` through a launch file, where YYYY will be the namespace name.
+- **Define the namespace** for the `eater_node` through a launch file according to the specified project structure.
+- **Define the namespace** for the `killer_node` node through a launch file according to the specified project structure.
 
 ---
 ## Part 3 - How to Run
@@ -107,3 +125,29 @@ This section provides instructions for cloning, building, and running the projec
 Open a terminal and clone the project repository. (Replace `<your-github-username>` and `<your-student-id>` with your actual information).
 ```bash
 git clone -b LAB3 https://github.com/SiwarutFeemJullaprom/FRA502-LAB-6702.git
+```
+### 2. Build the Workspace
+```bash
+cd FRA502-LAB-6702/
+colcon build
+```
+### 3. Run the System
+All nodes can be launched with a single command in a terminal.
+```bash
+# Source the workspace first
+source install/setup.bash
+# Run the launch file
+ros2 launch lab3 lab3_bringup.launch.py
+```
+### 4. Setting Param
+To set turtle's parameters use rqt_service_caller then change the expression
+
+```bash
+cd ~/ARCS2 && source install/setup.bash 
+ros2 run rqt_service_caller rqt_service_caller 
+```
+### 5. Rename the turtle
+To rename the turtle add eater_name:=<name> after launch file
+```bash
+cd ~/ARCS2 && source install/setup.bash && ros2 launch lab3 lab3_bringup.launch.py eater_name:=husband killer_name:=wife
+```
