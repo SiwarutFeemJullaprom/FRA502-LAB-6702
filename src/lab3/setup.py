@@ -2,7 +2,7 @@ from setuptools import setup
 import os
 from glob import glob
 
-package_name = 'lab2'
+package_name = 'lab3'
 
 setup(
     name=package_name,
@@ -13,7 +13,7 @@ setup(
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
         (os.path.join('share', package_name), glob('*.rviz')),
-        # เพิ่มบรรทัดนี้เพื่อติดตั้ง launch file
+        # แก้บรรทัดนี้ให้รู้จัก launch file ใหม่
         (os.path.join('share', package_name, 'launch'), glob('launch/*.py'))
     ],
     install_requires=['setuptools'],
@@ -26,6 +26,5 @@ setup(
     scripts=[
         'scripts/eater.py',
         'scripts/killer.py',
-        'scripts/turtlesim_pose.py'
     ],
 )
